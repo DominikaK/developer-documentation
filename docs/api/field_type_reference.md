@@ -30,6 +30,7 @@ Custom Field Types have to be programmed in PHP. However, the built-in Field Ty
 | [ISBN](#isbn-field-type) | Handles International Standard Book Number (ISBN) in 10-digit or 13-digit format.  | Yes | Yes |
 | [Keyword](#keyword-field-type) | Stores keywords. | Yes[^1^](#1-note-on-legacy-search-engine) | Yes |
 | [MapLocation](#maplocation-field-type) | Stores map coordinates. | Yes, with MapLocationDistance criterion | Yes |
+| [Matrix](#matrix-field-type) | TODO. |  |  |
 | [Media](#media-field-type) | Validates and stores a media file. | No | Yes |
 | [Null](#null-field-type) | Used as fallback for missing Field Types and for testing purposes. | N/A | N/A |
 | [Page](#page-field-type) | Stores a Page with a layout consisting of multiple zones. | N/A | N/A |
@@ -1434,6 +1435,36 @@ ezpublish:
 
     The option to automatically get user coordinates through the "Locate me" button
     is only available when the back office is served through the `https://` protocol.
+
+## Matrix Field Type
+
+This Field represents and handles a table of rows and columns of data.
+
+| Name     | Internal name | Expected input |
+|----------|---------------|----------------|
+| `Matrix` | `ezmatrix`    | mixed          |
+
+The Matrix Field Type is available via the eZ Platform Matrix Bundle
+provided by the https://github.com/ezsystems/ezplatform-matrix-fieldtype package.
+
+### PHP API Field Type
+
+#### Input expectations
+
+|Type|Description|Example|
+|------|------|------|
+
+#### Value Object
+
+`EzSystems\EzPlatformMatrixFieldtype\FieldType\Value` offers the following properties:
+
+|Property|Type|Description|
+|------|------|------|
+|`rows`|`RowsCollection`|TODO.|
+
+#### Validation
+
+This Field Type does not perform any special validation of the input value.
 
 ## Media Field Type
 
