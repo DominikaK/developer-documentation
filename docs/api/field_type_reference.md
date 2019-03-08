@@ -1451,8 +1451,17 @@ provided by the https://github.com/ezsystems/ezplatform-matrix-fieldtype package
 
 #### Input expectations
 
-|Type|Description|Example|
-|------|------|------|
+| Type | Description |Example|
+|---------|-------------|------|
+| `array` | Tablica obiektów `EzSystems\EzPlatformMatrixFieldtype\FieldType\Value\Row` z danymi kolumn. | Przykład niżej bo nie umiem multi-line code blocka zrobić |
+
+```php
+new FieldType\Value([
+    new FieldType\Value\Row(['col1' => 'Row 1, Col 1', 'col2' => 'Row 1, Col 2']),
+    new FieldType\Value\Row(['col1' => 'Row 2, Col 1', 'col2' => 'Row 2, Col 2']),
+    new FieldType\Value\Row(['col1' => 'Row 3, Col 1', 'col2' => 'Row 3, Col 2']),
+]);
+```
 
 #### Value Object
 
@@ -1460,11 +1469,48 @@ provided by the https://github.com/ezsystems/ezplatform-matrix-fieldtype package
 
 |Property|Type|Description|
 |------|------|------|
-|`rows`|`RowsCollection`|TODO.|
+|`rows`|`RowsCollection`|RowsCollection to tablica obiektów `Row` zawierających tablicę danych poszczególnych komórek (`Row::getCells()` zwraca tablice `['col1' => 'Value 1', /* ... */]`) |
 
 #### Validation
 
-This Field Type does not perform any special validation of the input value.
+~This Field Type does not perform any special validation of the input value.~
+
+*Dramatyczne spojrzenie chomika*. Czyżby?! 
+
+Pole musi posiadać minimalną ilość wierszy, ustalaną z poziomu edycji ContentType dla każdego pola typu ezmatrix osobno. Przy czym puste wiersze są ignorowane i wycinane; wiersz musi posiadać przynajmniej jedną kolumnę wypełnioną niepustą wartością (np. same spacje odpadają). To znaczy, że dla `Minimum number of rows: 3`, obiekt **nie** przejdzie walidacji:
+
+```php
+new FieldType\Value([
+    new FieldType\Value\Row(['col1' => 'Row 1, Col 1', 'col2' => 'Row 1, Col 2']),
+    new FieldType\Value\Row(['col1' => '', 'col2' => '']),
+    new FieldType\Value\Row(['col1' => 'Row 3, Col 1', 'col2' => 'Row 3, Col 2']),
+]);
+```
+
+Z powodu braku wymaganych przynajmniej 3 wierszy niepustych.
+
+Wycinanie pustych wierszy dotyczy też obiektów które spełnią wymagania walidacji. To znaczy, że:
+
+
+```php
+new FieldType\Value([
+    new FieldType\Value\Row(['col1' => 'Row 1, Col 1', 'col2' => 'Row 1, Col 2']),
+    new FieldType\Value\Row(['col1' => 'Row 2, Col 1', 'col2' => 'Row 2, Col 2']),
+    new FieldType\Value\Row(['col1' => '', 'col2' => '']),
+    new FieldType\Value\Row(['col1' => 'Row 4, Col 1', 'col2' => 'Row 4, Col 2']),
+]);
+```
+
+To wytnie pusty wiersz podczas zapisu i tablica będzie tożsama z:
+
+```php
+new FieldType\Value([
+    new FieldType\Value\Row(['col1' => 'Row 1, Col 1', 'col2' => 'Row 1, Col 2']),
+    new FieldType\Value\Row(['col1' => 'Row 2, Col 1', 'col2' => 'Row 2, Col 2']),
+    new FieldType\Value\Row(['col1' => 'Row 4, Col 1', 'col2' => 'Row 4, Col 2']),
+]);
+```
+
 
 ## Media Field Type
 
